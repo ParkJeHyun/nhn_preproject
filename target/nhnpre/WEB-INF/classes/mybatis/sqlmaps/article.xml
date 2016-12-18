@@ -1,0 +1,52 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.park.nhn_pre.dao.ArticleDao">
+    <select id="getArticle" resultType="kr.park.nhn_pre.artifacts.Article">
+        SELECT
+        *
+        FROM
+        article
+    </select>
+
+    <select id="getArticleById" parameterType="string" resultType="kr.park.nhn_pre.artifacts.Article">
+        SELECT
+        *
+        FROM
+        article
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="getPasswordById" parameterType="string" resultType="string">
+        SELECT
+        password
+        FROM
+        article
+        WHERE
+        id = #{id}
+    </select>
+
+
+    <insert id="insertArticle" parameterType="kr.park.nhn_pre.artifacts.Article">
+        INSERT
+        INTO article (eamil, password, text, add_time)
+        VALUE
+        (#{email}, #{password}, #{text}, now())
+    </insert>
+
+    <update id="modifyArticle" parameterType="kr.park.nhn_pre.artifacts.Article">
+        UPDATE article
+        SET email = {#eamil}, password = {#password}, text = #{text}, modify_time = now()
+        WHERE id = #{id}
+
+    </update>
+
+    <delete id="removeArticleById" parameterType="string">
+        DELETE
+        FROM
+        article
+        WHERE
+        w_id = #{key}
+    </delete>
+</mapper>

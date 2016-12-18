@@ -1,6 +1,6 @@
 <html>
 <body>
-    ${message}
+    ${article}
     I'M ParkJeHyun
 </body>
 </html>
