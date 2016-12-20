@@ -22,7 +22,14 @@ public class ArticleDaoImpl implements ArticleDao{
 
     public List<Article> getAllArticle() {
         List<Article> articles = sqlSession.selectList("getArticle");
-        return null;
+
+        return articles;
+    }
+
+    public Article getArticleById(String id){
+        Article article = sqlSession.selectOne("getArticleById", id);
+
+        return article;
     }
 
     public String getPasswordById(String id) {

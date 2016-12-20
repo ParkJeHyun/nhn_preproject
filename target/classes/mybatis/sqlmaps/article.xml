@@ -4,18 +4,31 @@
 <mapper namespace="kr.park.nhn_pre.dao.ArticleDao">
     <select id="getArticle" resultType="kr.park.nhn_pre.artifacts.Article">
         SELECT
-        *
+        id,
+        email,
+        password,
+        text,
+        add_time,
+        modify_time
         FROM
         article
+        ORDER BY
+        add_time DESC
     </select>
 
     <select id="getArticleById" parameterType="string" resultType="kr.park.nhn_pre.artifacts.Article">
         SELECT
-        *
+        id,
+        email,
+        password,
+        text,
+        add_time,
+        modify_time
         FROM
         article
         WHERE
         id = #{id}
+
     </select>
 
     <select id="getPasswordById" parameterType="string" resultType="string">
@@ -30,14 +43,14 @@
 
     <insert id="insertArticle" parameterType="kr.park.nhn_pre.artifacts.Article">
         INSERT
-        INTO article (eamil, password, text, add_time)
+        INTO article (email, password, text, add_time)
         VALUE
         (#{email}, #{password}, #{text}, now())
     </insert>
 
     <update id="modifyArticle" parameterType="kr.park.nhn_pre.artifacts.Article">
         UPDATE article
-        SET email = {#eamil}, password = {#password}, text = #{text}, modify_time = now()
+        SET email = {#email}, password = {#password}, text = #{text}, modify_time = now()
         WHERE id = #{id}
 
     </update>

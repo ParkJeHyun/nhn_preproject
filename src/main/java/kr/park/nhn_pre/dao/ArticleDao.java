@@ -10,6 +10,8 @@ import java.util.List;
 public interface ArticleDao {
     List<Article> getAllArticle();
 
+    Article getArticleById(String id);
+
     String getPasswordById(String id);
 
     Integer insertArticle(Article article);
