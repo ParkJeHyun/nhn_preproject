@@ -50,7 +50,7 @@
 
     <update id="modifyArticle" parameterType="kr.park.nhn_pre.artifacts.Article">
         UPDATE article
-        SET email = {#email}, password = {#password}, text = #{text}, modify_time = now()
+        SET text = #{text}, modify_time = now()
         WHERE id = #{id}
 
     </update>
@@ -60,6 +60,6 @@
         FROM
         article
         WHERE
-        w_id = #{key}
+        id = #{id}
     </delete>
 </mapper>

@@ -25,6 +25,26 @@
             margin: 10px auto 10px auto;
             padding: 40px 40px 40px 40px;
         }
+        #password_modal {
+            display:none;
+            background-color:#FFFFFF;
+            position:absolute;
+            max-width: 400px;
+            max-height: 200px;
+            margin: auto;
+            padding:10px;
+        }
+
+        #modify_modal {
+            display:none;
+            background-color:#FFFFFF;
+            position:absolute;
+            max-width: 400px;
+            max-height: 200px;
+            margin: auto;
+            padding:10px;
+        }
+
     </style>
 </head>
 <body>
@@ -34,11 +54,7 @@
         <input type="password" id="password" class="form-control" name="password" placeholder="Password" required="true"><br/>
         <textarea id="text" name="text" rows="4" required="true" placeholder="내용" style="width:100%;"></textarea><br/>
         <input type="button" class="btn btn-primary" onclick="add_article()" value="등록" style="margin-top: 15px; width: 40%; float: right">
-        <!--
-        <div id="addBtn">
-            <input type="submit" name="add" value="등록" >&nbsp;&nbsp;
-        </div>
-        -->
+
     </form>
 </div>
 <c:forEach var="article" items="${articles}">
@@ -49,8 +65,8 @@
                     <p id="textemail">${article.email}</p>
                 </div>
                 <div class="col-md-4">
-                    <button class="btn btn-danger" style="float: right;">삭제</button>
-                    <button class="btn btn-warning" style="float: right; margin-right: 5px">수정</button>
+                    <button class="btn btn-danger" style="float: right;" onclick="get_password(${article.id}, 0)">삭제</button>
+                    <button class="btn btn-warning" style="float: right; margin-right: 5px" onclick="get_password(${article.id}, 1)">수정</button>
                 </div>
             </div>
             <div style="text-align: right">
@@ -62,25 +78,36 @@
         </div>
     </div>
 </c:forEach>
-<!--
-    <table class="table table-bordered table-hover">
-        <tbody>
-        <c:forEach var="article" items="${articles}">
-            <tr align="center">
-                <td>${article.email}</td>
-                <td><fmt:formatDate value="${article.add_time}" pattern="MM-dd hh:mm"/></td>
-            </tr>
-            <tr align="center">
-                <td>${article.text}</td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-    -->
 </body>
+<div class="modal fade" id="password_modal">
+    <h3>비밀번호를 입력해주세요.</h3>
+    <form id="password_form">
+        <input type="password" id="input_password" class="form-control" name="input_password" placeholder="Password" required="true"><br/>
+        <div class="row" style="padding-right: 15px">
+            <button class="btn btn-danger" data-dismiss="modal" style="float: right">취소</button>
+            <input type="button" class="btn btn-primary" onclick="change_article()" value="확인" style="float: right; margin-right: 10px">
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modify_modal">
+    <h3>변경할 텍스트를 입력해주세요.</h3>
+    <form id="text_form">
+        <input type="text" id="input_text" class="form-control" name="input_text" placeholder="내용" required="true"><br/>
+        <div class="row" style="padding-right: 15px">
+            <button class="btn btn-danger" data-dismiss="modal" style="float: right">취소</button>
+            <input type="button" class="btn btn-primary" onclick="modify_article()" value="확인" style="float: right; margin-right: 10px">
+        </div>
+    </form>
+</div>
+
+
 <script src="../resources/jquery/jquery-3.1.1.min.js"></script>
 <script src="../resources/bootstrap/js/bootstrap.min.js"></script>
 <script>
+    var password;
+    var click_flag;//0->삭제, 1->수정
+    var change_id;
     function add_article() {
         var form = $('form').serialize();
         $.ajax({
@@ -101,19 +128,79 @@
             }
         })
     }
-//    $('#addBtn').click(function () {
-//        var form = $('form').serialize();
-//        $.ajax({
-//            url: '/add',
-//            type: 'POST',
-//            data: form,
-//            success: function (responseData) {
-//                alert(responseData);
-//            },
-//            error: function (request, status, error) {
-//                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-//            }
-//        })
-//    })
+
+    function get_password(id, flag) {
+        click_flag = flag;
+        change_id = id;
+        $.ajax({
+            url: '/password/'+id,
+            type: 'get',
+            success: function (responseData) {
+                password = responseData;
+                $('#password_modal').modal();
+            },
+            error: function (request, status, error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        })
+    }
+
+    function change_article() {
+        var input_password = $('#input_password').val();//document.getElementsByTagName("input_password").value;
+        if(input_password == password){
+            if(click_flag == 0){
+                //삭제
+                $.ajax({
+                    url: 'delete/'+change_id,
+                    type: 'delete',
+                    success: function (response) {
+                        if(response == 1){
+                            alert("삭제가 완료 되었습니다.");
+                            window.location.href = '/';
+                        }
+                    }
+                })
+            }
+            else {
+                //수정
+                $('#password_modal').modal('hide');
+                $('#modify_modal').modal();
+            }
+        }
+        else {
+            alert("비밀번호가 틀렸습니다.");
+        }
+    }
+
+    function modify_article() {
+        var text = $('#input_text').val();
+
+        $.ajax({
+            url: 'modify/'+change_id,
+            type: 'put',
+            data: text,
+            success: function (response) {
+                if(response == 1){
+                    alert("변경이 완료 되었습니다.");
+                    window.location.href = '/';
+                }
+            }
+        })
+    }
+
+    //    $('#addBtn').click(function () {
+    //        var form = $('form').serialize();
+    //        $.ajax({
+    //            url: '/add',
+    //            type: 'POST',
+    //            data: form,
+    //            success: function (responseData) {
+    //                alert(responseData);
+    //            },
+    //            error: function (request, status, error) {
+    //                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+    //            }
+    //        })
+    //    })
 </script>
 </html>

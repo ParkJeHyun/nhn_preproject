@@ -6,11 +6,20 @@ import java.util.Date;
  * Created by Administrator on 2016-12-19.
  */
 public class Article {
+    String id;
     String email;
     String password;
     String text;
     Date add_time;
     Date modify_time;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getEmail() {
         return email;

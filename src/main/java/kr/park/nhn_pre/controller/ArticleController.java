@@ -5,9 +5,7 @@ import kr.park.nhn_pre.dao.ArticleDao;
 import kr.park.nhn_pre.util.EmailCheck;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +38,37 @@ public class ArticleController {
                 response.getWriter().print(2);
             }
         }  catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/password/{id}", method = RequestMethod.GET)
+    public void getPassword(@PathVariable String id, HttpServletResponse response) {
+        try {
+            response.getWriter().print(articleDao.getPasswordById(id));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/modify/{id}", method = RequestMethod.PUT)
+    public void modify(@PathVariable String id, @RequestBody String text, HttpServletResponse response) {
+        Article article = articleDao.getArticleById(id);
+        article.setText(text);
+
+        try {
+            response.getWriter().print(articleDao.modifyArticle(article));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable String id, HttpServletResponse response) {
+        System.out.println("Controller : " + id);
+        try {
+            response.getWriter().print(articleDao.deleteArticleById(id));
+        } catch (IOException e){
             e.printStackTrace();
         }
     }
