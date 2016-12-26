@@ -70,8 +70,13 @@
                 </div>
             </div>
             <div style="text-align: right">
-                <fmt:formatDate value="${article.add_time}" pattern="MM-dd hh:mm"/>
+                등록 시각 : <fmt:formatDate value="${article.add_time}" pattern="MM-dd hh:mm"/>
             </div>
+            <c:if test="${not empty article.modify_time}">
+                <div style="text-align: right">
+                    수정 시각 : <fmt:formatDate value="${article.modify_time}" pattern="MM-dd hh:mm"/>
+                </div>
+            </c:if>
             <div class="row">
                 <p id="textbody">${article.text}</p>
             </div>
