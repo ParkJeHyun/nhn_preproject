@@ -112,7 +112,8 @@
 <script>
     var password;
     var click_flag;//0->삭제, 1->수정
-    var change_id;
+    var change_id;//변경 혹은 삭제할 Article의 ID
+
     function add_article() {
         var form = $('form').serialize();
         $.ajax({
@@ -135,6 +136,7 @@
     }
 
     function get_password(id, flag) {
+        //ID에 해당하는 비밀번호 불러와서 password변수에 저장
         click_flag = flag;
         change_id = id;
         $.ajax({
@@ -153,6 +155,7 @@
     function change_article() {
         var input_password = $('#input_password').val();//document.getElementsByTagName("input_password").value;
         if(input_password == password){
+            //사용자가 입력한 password가 Database에서 불러온 password와 같을 때
             if(click_flag == 0){
                 //삭제
                 $.ajax({
@@ -193,19 +196,5 @@
         })
     }
 
-    //    $('#addBtn').click(function () {
-    //        var form = $('form').serialize();
-    //        $.ajax({
-    //            url: '/add',
-    //            type: 'POST',
-    //            data: form,
-    //            success: function (responseData) {
-    //                alert(responseData);
-    //            },
-    //            error: function (request, status, error) {
-    //                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-    //            }
-    //        })
-    //    })
 </script>
 </html>

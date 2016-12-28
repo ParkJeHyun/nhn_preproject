@@ -22,6 +22,7 @@ public class ArticleController {
 
     @RequestMapping("/")
     public String getArticles(Model model) {
+        //Main 페이지에서 Article 리스트를 불러오기 위한 Controller
         model.addAttribute("articles", articleDao.getAllArticle());
 
         return "index";
@@ -29,8 +30,10 @@ public class ArticleController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void add(Article article, HttpServletResponse response) {
+        //Article을 추가
         try {
             if(EmailCheck.checkEmail(article.getEmail())){
+                //Email 형식이 제대로 됨
                 response.getWriter().print(articleDao.insertArticle(article));
             }
             else {
@@ -44,6 +47,7 @@ public class ArticleController {
 
     @RequestMapping(value = "/password/{id}", method = RequestMethod.GET)
     public void getPassword(@PathVariable String id, HttpServletResponse response) {
+        //해당 id의 Article의 비밀번호 부르기
         try {
             response.getWriter().print(articleDao.getPasswordById(id));
         } catch (IOException e){
@@ -53,6 +57,7 @@ public class ArticleController {
 
     @RequestMapping(value = "/modify/{id}", method = RequestMethod.PUT)
     public void modify(@PathVariable String id, @RequestBody String text, HttpServletResponse response) {
+        //Article의 내용 변경
         Article article = articleDao.getArticleById(id);
         article.setText(text);
 
@@ -65,7 +70,7 @@ public class ArticleController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable String id, HttpServletResponse response) {
-        System.out.println("Controller : " + id);
+        //id에 해당하는 Article삭제
         try {
             response.getWriter().print(articleDao.deleteArticleById(id));
         } catch (IOException e){

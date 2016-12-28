@@ -1,5 +1,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Article을 컨트롤 하기 위한 SQL문들의 xml파일
+-->
 
 <mapper namespace="kr.park.nhn_pre.dao.ArticleDao">
     <select id="getArticle" resultType="kr.park.nhn_pre.artifacts.Article">
